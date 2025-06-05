@@ -39,17 +39,7 @@ Cache e Sessões: Redis
 
 
 ## 🧱 Diagrama de Arquitetura
-graph TD
-  A[Frontend (React)] --> B[API Backend (Express)]
-  B --> C[MongoDB]
-  B --> D[Stripe API]
-  B --> E[Redis]
-  B --> F[Cloudinary]
 
-  B --> B1[Auth Routes]
-  B --> B2[Product Routes]
-  B --> B3[Cart Routes]
-  B --> B4[Payment Routes]
 
 
 
