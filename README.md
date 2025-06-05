@@ -40,7 +40,7 @@ Cache e Sessões: Redis
 
 ## 🧱 Diagrama de Arquitetura
 
-
+![alt text](diagrama_docampo.png)
 
 
 ## 🚀 Execução Local
