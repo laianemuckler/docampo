@@ -84,3 +84,19 @@ cd frontend
 npm run dev
 ```
 
+## 🚀 Deploy 
+
+Este projeto está hospedado na plataforma [Render](https://render.com).
+
+### Passos para o Deploy
+1. Subir o código atualizado no repositório do github.
+2. Adicinoar os comandos para o build e start na primeira configuração:
+```shell
+npm run build 
+```
+```shell
+npm run start 
+```
+3. Configurar as variáveis de ambiente a partir do arquivo .env.
+
+O projeto pode ser encontrado aqui: [docampo](https://docampo.onrender.com/)
