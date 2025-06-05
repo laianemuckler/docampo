@@ -17,7 +17,7 @@ Pagamento: Stripe
 
 Upload de Imagens: Cloudinary
 
-Cache e Sessões: Redis
+Cache de tokens: Redis
 
 
 ## ✅ Funcionalidades Implementadas
