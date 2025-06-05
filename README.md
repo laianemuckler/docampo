@@ -19,6 +19,40 @@ Upload de Imagens: Cloudinary
 
 Cache e Sessões: Redis
 
+
+## ✅ Funcionalidades Implementadas
+
+| Módulo     | Funcionalidade                                             | Status |
+|------------|------------------------------------------------------------|--------|
+| **Auth**   | Cadastro de usuários (email, senha, CPF, endereço)         | ✅     |
+|            | Login e autenticação via JWT                               | ✅     |
+| **Catálogo** | Listagem de produtos com imagem, nome, preço             | ✅     |
+|            | Filtro por categoria                                       | ✅     |
+| **Carrinho** | Adicionar/remover produtos do carrinho                   | ✅     |
+|            | Cálculo de total                                           | ✅     |
+| **Checkout** | Pagamento simulado via Stripe                            | ✅     |
+|            | Geração de pedido fake com ID                              | ✅     |
+| **Admin**  | CRUD de produtos com autenticação de administrador         | ✅     |
+|            | Painel Admin para cadastrar produtos                       | ✅     |
+| **UX/UI**  | Feedback visual para ações (ex: item adicionado)           | ✅     |
+| **Segurança** | Senhas criptografadas e boas práticas básicas           | ✅     |
+
+
+## 🧱 Diagrama de Arquitetura
+graph TD
+  A[Frontend (React)] --> B[API Backend (Express)]
+  B --> C[MongoDB]
+  B --> D[Stripe API]
+  B --> E[Redis]
+  B --> F[Cloudinary]
+
+  B --> B1[Auth Routes]
+  B --> B2[Product Routes]
+  B --> B3[Cart Routes]
+  B --> B4[Payment Routes]
+
+
+
 ## 🚀 Execução Local
 
 ### Variáveis de ambiente - adicione um arquivo .env com suas secrets
@@ -41,40 +75,22 @@ CLIENT_URL=http://localhost:5173
 NODE_ENV=development
 ```
 
-
+### Para baixar as dependências do projeto
 ```shell
-npm run build
+npm install
 ```
 
 ### Para iniciar o backend
 
 ```shell
 cd backend
-npm run start
+npm run dev
 ```
+
+### Para iniciar o frontend
 
 ```shell
 cd frontend
 npm run dev
 ```
-
-## ✅ Funcionalidades Implementadas
-
-| Módulo     | Funcionalidade                                             | Status |
-|------------|------------------------------------------------------------|--------|
-| **Auth**   | Cadastro de usuários (email, senha, CPF, endereço)         | ✅     |
-|            | Login e autenticação via JWT                               | ✅     |
-| **Catálogo** | Listagem de produtos com imagem, nome, preço             | ✅     |
-|            | Filtro por categoria                                       | ✅     |
-| **Carrinho** | Adicionar/remover produtos do carrinho                   | ✅     |
-|            | Cálculo de total                                           | ✅     |
-| **Checkout** | Pagamento simulado via Stripe                            | ✅     |
-|            | Geração de pedido fake com ID                              | ✅     |
-| **Admin**  | CRUD de produtos com autenticação de administrador         | ✅     |
-|            | Painel Admin para cadastrar produtos                       | ✅     |
-| **UX/UI**  | Feedback visual para ações (ex: item adicionado)           | ✅     |
-| **Segurança** | Senhas criptografadas e boas práticas básicas           | ✅     |
-
-
-## 🧱 Diagrama de Arquitetura
 
