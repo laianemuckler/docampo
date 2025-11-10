@@ -1,4 +1,4 @@
-import * as paymentService from "../services/payment.service.factory.js";
+import { paymentService } from "../bootstrap.js";
 
 export const createCheckoutSession = async (req, res) => {
   try {

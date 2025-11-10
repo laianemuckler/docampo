@@ -5,6 +5,7 @@ import * as productRepo from "./repositories/product.repository.js";
 import * as cloudinaryClient from "./lib/cloudinary.client.js";
 import { createProductService } from "./services/product.service.factory.js";
 import * as orderRepo from "./repositories/order.repository.js";
+import * as cartRepo from "./repositories/cart.repository.js";
 import { createPaymentService } from "./services/payment.service.factory.js";
 import { stripe } from "./lib/stripe.js";
 import { createCartService } from "./services/cart.service.factory.js";
@@ -13,7 +14,7 @@ export const authService = createAuthService({ userRepo, tokenRepo });
 
 export const productService = createProductService({ productRepo, storageClient: cloudinaryClient });
 
-export const paymentService = createPaymentService({ stripeClient: stripe, orderRepo });
+export const paymentService = createPaymentService({ stripeClient: stripe, orderRepo, cartRepository: cartRepo });
 
 export const cartService = createCartService({});
 

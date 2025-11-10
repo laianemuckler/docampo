@@ -1,4 +1,4 @@
-export function createPaymentService({ stripeClient, orderRepo }) {
+export function createPaymentService({ stripeClient, orderRepo, cartRepository }) {
   const createCheckoutSession = async (userId, products, clientUrl) => {
     if (!Array.isArray(products) || products.length === 0) {
       const err = new Error("Invalid or empty products array");
@@ -44,6 +44,25 @@ export function createPaymentService({ stripeClient, orderRepo }) {
     const session = await stripeClient.checkout.sessions.retrieve(sessionId);
 
     if (session.payment_status === "paid") {
+      // idempotency: if an order with this stripeSessionId already exists, return it
+      const existing = await orderRepo.findByStripeSessionId(sessionId);
+      if (existing) {
+        console.log(`Duplicate checkout session detected - returning existing order. stripeSessionId=${sessionId}, orderId=${existing._id}`);
+        // try to clear user's cart as cleanup (best-effort)
+        try {
+          const userId = session.metadata?.userId;
+          if (userId && cartRepository && cartRepository.findUserById) {
+            const user = await cartRepository.findUserById(userId);
+            if (user) {
+              user.cartItems = [];
+              await cartRepository.saveUser(user);
+            }
+          }
+        } catch (e) {
+          console.log("Failed to clear cart after duplicate detection:", e.message || e);
+        }
+        return existing;
+      }
       const products = JSON.parse(session.metadata.products);
       const newOrder = await orderRepo.createOrder({
         user: session.metadata.userId,
@@ -51,6 +70,20 @@ export function createPaymentService({ stripeClient, orderRepo }) {
         totalAmount: session.amount_total / 100,
         stripeSessionId: sessionId,
       });
+
+      // clear user's cart after successful order creation (best-effort)
+      try {
+        const userId = session.metadata?.userId;
+        if (userId && cartRepository && cartRepository.findUserById) {
+          const user = await cartRepository.findUserById(userId);
+          if (user) {
+            user.cartItems = [];
+            await cartRepository.saveUser(user);
+          }
+        }
+      } catch (e) {
+        console.log("Failed to clear cart after order creation:", e.message || e);
+      }
 
       return newOrder;
     }
