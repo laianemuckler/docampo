@@ -1,4 +1,4 @@
-import * as productService from "../services/product.service.factory.js";
+import { productService } from "../bootstrap.js";
 
 export const getAllProducts = async (req, res) => {
   try {

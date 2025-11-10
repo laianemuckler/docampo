@@ -1,6 +1,20 @@
 import jwt from "jsonwebtoken";
 
 export function createAuthService({ userRepo, tokenRepo, jwtLib = jwt }) {
+  const cepRegex = /^\d{5}-?\d{3}$/;
+
+  const fetchViaCEP = async (cep) => {
+    try {
+      const cleaned = cep.replace(/\D/g, "");
+      const res = await fetch(`https://viacep.com.br/ws/${cleaned}/json/`);
+      if (!res.ok) return null;
+      const data = await res.json();
+      if (data.erro) return null;
+      return { street: data.logradouro, city: data.localidade, state: data.uf, cep: data.cep };
+    } catch (e) {
+      return null;
+    }
+  };
   const generateTokens = (userId) => {
     const accessToken = jwtLib.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
       expiresIn: "15m",
@@ -21,7 +35,34 @@ export function createAuthService({ userRepo, tokenRepo, jwtLib = jwt }) {
       throw err;
     }
 
-    const user = await userRepo.createUser({ name, email, password, document, address });
+    // normalize address: accept string or structured object
+    let addressToSave = {};
+    if (address) {
+      if (typeof address === 'string') {
+        addressToSave = { street: address };
+      } else if (address.cep) {
+        if (!cepRegex.test(address.cep)) {
+          const err = new Error('Invalid CEP format');
+          err.status = 400;
+          throw err;
+        }
+
+        const resolved = await fetchViaCEP(address.cep);
+
+        addressToSave = {
+          cep: address.cep,
+          street: resolved?.street || address.street || '',
+          number: address.number || '',
+          complement: address.complement || '',
+          city: resolved?.city || address.city || '',
+          state: resolved?.state || address.state || '',
+        };
+      } else {
+        addressToSave = address;
+      }
+    }
+
+    const user = await userRepo.createUser({ name, email, password, document, address: addressToSave });
     const tokens = generateTokens(user._id);
     await tokenRepo.setRefreshToken(user._id, tokens.refreshToken);
 

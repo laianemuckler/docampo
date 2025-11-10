@@ -8,3 +8,7 @@ export const createOrder = async (orderData) => {
 export const findById = async (id) => {
   return Order.findById(id);
 };
+
+export const findByStripeSessionId = async (sessionId) => {
+  return Order.findOne({ stripeSessionId: sessionId });
+};

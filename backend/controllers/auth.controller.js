@@ -21,7 +21,10 @@ export const signup = async (req, res) => {
 
 		setCookies(res, tokens.accessToken, tokens.refreshToken);
 
-		res.status(201).json({ _id: user._id, name: user.name, email: user.email, role: user.role });
+		// remove sensitive fields before returning to client
+		const safeUser = user && user.toObject ? user.toObject() : JSON.parse(JSON.stringify(user));
+		if (safeUser && safeUser.password) delete safeUser.password;
+		res.status(201).json(safeUser);
 	} catch (error) {
 		console.log("Error in signup controller", error.message);
 		res.status(error.status || 500).json({ message: error.message });
@@ -72,7 +75,9 @@ export const refreshToken = async (req, res) => {
 export const getProfile = async (req, res) => {
 	try {
 		const user = await authService.getProfile(req.user._id);
-		res.json(user);
+		const safeUser = user && user.toObject ? user.toObject() : JSON.parse(JSON.stringify(user));
+		if (safeUser && safeUser.password) delete safeUser.password;
+		res.json(safeUser);
 	} catch (error) {
 		res.status(500).json({ message: "Server error", error: error.message });
 	}

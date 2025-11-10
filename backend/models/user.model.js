@@ -26,11 +26,10 @@ const userSchema = new mongoose.Schema(
     trim: true,
     set: (v) => v.replace(/\D/g, "") // remove qualquer caractere que não seja número
   },
-  address: {
-    type: String,
-    required: [true, "Address is required"],
-    trim: true,
-  },
+	address: {
+		type: mongoose.Schema.Types.Mixed, // allow string or structured object
+		required: [true, "Address is required"],
+	},
 		cartItems: [
 			{
 				quantity: {

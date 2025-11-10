@@ -40,5 +40,9 @@ export function createProductService({ productRepo, storageClient }) {
     return productRepo.findByCategory(category);
   };
 
+  const getRecommended = async (size = 4) => {
+    return productRepo.sample(size);
+  };
+
   return { listProducts, createProduct, deleteProduct, getByCategory };
 }
