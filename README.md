@@ -55,6 +55,12 @@ Projeto organizado em camadas para separação de responsabilidades:
 
 Essa estrutura facilita o isolamento de dependências e evolução incremental, contribuindo com a manutenabilidade e evolução sustentável da aplicação.
 
+## 🗂️ Ferramenta de Gerenciamento
+
+Utilizei um quadro no Notion para gerenciar o projeto em estilo Kanban. Além do quadro, o espaço do Notion agrega a documentação do projeto: requisitos funcionais e não-funcionais e diagramas arquiteturais.
+
+Você pode acessar o board do projeto aqui:  [docampo](https://www.notion.so/Projeto-docampo-19d1eef2e3d241e2b2f67cfc108d1186)
+
 ## 🔗 API Endpoints
 
 - Auth
@@ -135,6 +141,8 @@ npm run dev
 
 Este projeto está hospedado na plataforma [Render](https://render.com).
 
+O projeto pode ser encontrado aqui: [docampo](https://docampo.onrender.com/)
+
 ### Passos para o Deploy
 
 1. Subir o código atualizado no repositório do github.
@@ -150,4 +158,10 @@ npm run start
 
 3. Configurar as variáveis de ambiente a partir do arquivo .env.
 
-O projeto pode ser encontrado aqui: [docampo](https://docampo.onrender.com/)
+## 🗂️ Project board
+
+We use a Notion board to manage the project in Kanban style and to aggregate related documentation. The Notion workspace contains the functional and non-functional requirements, architecture diagrams, and the configuration details for the management board.
+
+Access the project board here:
+
+[Notion — Projeto docampo](https://www.notion.so/Projeto-docampo-19d1eef2e3d241e2b2f67cfc108d1186)
