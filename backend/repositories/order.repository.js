@@ -12,3 +12,7 @@ export const findById = async (id) => {
 export const findByStripeSessionId = async (sessionId) => {
   return Order.findOne({ stripeSessionId: sessionId });
 };
+
+export const markEmailSent = async (orderId) => {
+  return Order.findByIdAndUpdate(orderId, { emailSent: true }, { new: true });
+};
