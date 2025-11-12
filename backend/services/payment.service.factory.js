@@ -1,3 +1,6 @@
+import { addEmailJob } from "../lib/queue.js";
+import * as userRepo from "../repositories/user.repository.js";
+
 export function createPaymentService({ stripeClient, orderRepo, cartRepository }) {
   const createCheckoutSession = async (userId, products, clientUrl) => {
     if (!Array.isArray(products) || products.length === 0) {
@@ -41,7 +44,9 @@ export function createPaymentService({ stripeClient, orderRepo, cartRepository }
   };
 
   const handleCheckoutSuccess = async (sessionId) => {
+    console.log("paymentService.handleCheckoutSuccess start", sessionId);
     const session = await stripeClient.checkout.sessions.retrieve(sessionId);
+    console.log("Stripe session retrieved", session && session.id, "status", session && session.payment_status);
 
     if (session.payment_status === "paid") {
       // idempotency: if an order with this stripeSessionId already exists, return it
@@ -61,6 +66,19 @@ export function createPaymentService({ stripeClient, orderRepo, cartRepository }
         } catch (e) {
           console.log("Failed to clear cart after duplicate detection:", e.message || e);
         }
+        // try enqueue email job for existing order (best-effort) if not sent
+        try {
+          const userId = session.metadata?.userId;
+          const user = userId ? await userRepo.findById(userId) : null;
+          if (user) {
+            console.log("Enqueueing email job for existing order", existing._id, "to", user.email);
+            await addEmailJob({ orderId: existing._id, email: user.email, name: user.name, items: existing.products, total: existing.totalAmount });
+            console.log("Email job enqueued for existing order", existing._id);
+          }
+        } catch (e) {
+          console.log("Failed to enqueue email for existing order:", e.message || e);
+        }
+
         return existing;
       }
       const products = JSON.parse(session.metadata.products);
@@ -70,6 +88,18 @@ export function createPaymentService({ stripeClient, orderRepo, cartRepository }
         totalAmount: session.amount_total / 100,
         stripeSessionId: sessionId,
       });
+
+      // enqueue email job for the order (async)
+      try {
+        const user = session.metadata?.userId ? await userRepo.findById(session.metadata.userId) : null;
+        if (user) {
+          console.log("Enqueueing email job for new order", newOrder._id, "to", user.email);
+          await addEmailJob({ orderId: newOrder._id, email: user.email, name: user.name, items: newOrder.products, total: newOrder.totalAmount });
+          console.log("Email job enqueued for new order", newOrder._id);
+        }
+      } catch (e) {
+        console.log("Failed to enqueue email job:", e.message || e);
+      }
 
       // clear user's cart after successful order creation (best-effort)
       try {
@@ -85,7 +115,8 @@ export function createPaymentService({ stripeClient, orderRepo, cartRepository }
         console.log("Failed to clear cart after order creation:", e.message || e);
       }
 
-      return newOrder;
+  console.log("paymentService.handleCheckoutSuccess finished for order", newOrder._id);
+  return newOrder;
     }
 
     const err = new Error("Payment not completed");
