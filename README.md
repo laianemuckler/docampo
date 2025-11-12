@@ -59,7 +59,7 @@ Essa estrutura facilita o isolamento de dependências e evolução incremental, 
 
 Utilizei um quadro no Notion para gerenciar o projeto em estilo Kanban. Além do quadro, o espaço do Notion agrega a documentação do projeto: requisitos funcionais e não-funcionais e diagramas arquiteturais.
 
-Você pode acessar o board do projeto aqui:  [docampo](https://www.notion.so/Projeto-docampo-19d1eef2e3d241e2b2f67cfc108d1186)
+Você pode acessar o board do projeto aqui: [docampo](https://www.notion.so/Projeto-docampo-19d1eef2e3d241e2b2f67cfc108d1186)
 
 ## 🔗 API Endpoints
 
@@ -158,10 +158,18 @@ npm run start
 
 3. Configurar as variáveis de ambiente a partir do arquivo .env.
 
-## 🗂️ Project board
+## 🆕 Últimas implementações
 
-We use a Notion board to manage the project in Kanban style and to aggregate related documentation. The Notion workspace contains the functional and non-functional requirements, architecture diagrams, and the configuration details for the management board.
+- Cadastro de endereço com validação de CEP
+- Perfil de usuário com histórico de compras
 
-Access the project board here:
+## 🔧 Melhorias / Refatoração
 
-[Notion — Projeto docampo](https://www.notion.so/Projeto-docampo-19d1eef2e3d241e2b2f67cfc108d1186)
+- Refatoração do backend para arquitetura em camadas (routes → controllers → services → repositories) e introdução de `bootstrap.js` para injeção de dependências.
+
+## 🚧 Implementações futuras
+
+- Containerização da aplicação
+- Adição de testes unitários cobrindo pelo menos 80% do código
+- Possibilidade de visualizar e editar os dados cadastrais no perfil do usuário
+- Envio de email após o checkout com dados da compra
