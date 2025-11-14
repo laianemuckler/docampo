@@ -39,7 +39,13 @@ Cache de tokens: Redis
 
 ## 🧱 Diagrama de Arquitetura
 
-![alt text](diagram.png)
+### C2 — Container Diagram
+
+![C2](diagramc2.png)
+
+### C3 — Component Diagram (Backend)
+
+![C3](diagramc3.png)
 
 ## 🏗️ Arquitetura
 
